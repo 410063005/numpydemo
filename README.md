@@ -1,17 +1,18 @@
 这个项目是使用 numpy 实现的一些有趣且实用的例子。
 
+# 背景
+最近在看 numpy，但是看 API 很枯燥。我从事 Android 开发，Android 中经常有对图片缩放、旋转、灰化、模糊等需求。用 numpy 来对图片进行类似处理，边玩边学，会不会多一点乐趣？不妨试试。
+
+阅读本文前，你最好了解某种编程语言，或者至少能理解什么是二维数组。
+
 # 图片处理
-我从事 Android 开发。Android 中经常有对图片缩放、旋转、灰化、模糊等操作。如何使用 numpy 对图片进行处理呢？
-
-(最近在看 numpy，感觉学习它的 API 很枯燥。用来处理图片或许会带来一点乐趣，边玩边学哈哈。)
-
 python 中有多种方式处理图片，包括：
 
 + opencv
 + matplotlib
 + PIL
 
-我在这里使用的是 matplotlib (因为机器上已经装好了。:) )
+我在使用的是 matplotlib (因为机器上已经装好了。:) )
 
 ```python
 import matplotlib.pyplot as plt # plt 用于显示图片
@@ -220,7 +221,7 @@ private void grey(Bitmap sourceBitmap, Bitmap blurredBitmap) {
    A’ = p*R + q*G + r*B + s*A + t;
 ```
 
-创建一个 `ColorMatrix` 并调用 `setSaturation(0)` 后，会得到什么结果？
+ColorMatrix 的部分源码如下。
 
 ```java
 public class ColorMatrix {
@@ -256,7 +257,7 @@ public class ColorMatrix {
     }    
 ```
 
- 后，会得到什么结果？使用 numpy 算一下。
+创建 `ColorMatrix` 并调用 `setSaturation(0)` 后就能对图片进行灰化处理，是不是很神奇。我们完全可以使用 numpy 来计算一下这个处理过程。
 
 ```
 >>> cm = np.array(range(20), float) # 注意这里的 float 参数
@@ -274,16 +275,25 @@ array([[ 0.213,  0.715,  0.072,  3.   ,  4.   ],
        [15.   , 16.   , 17.   ,  1.   , 19.   ]])       
 ```
 
+解释一下上面的步骤：
 
-这里解释一下 cm1, cm2, cm3 的含义：
++ 创建 `cm`，它是 1x20 的 array
++ 将 `cm` 中指定的元素设为1 (即 `ColorMatrix.reset()`)
++ 将 `cm` 中指定的元素设为某个参数 (即 `ColorMatrix.setSaturation(0)`)
++ 将 `cm` 分解为 `cm2` 和 `cm3` (因为待处理的图片没有 alpha 分量，分解一下方便后续操作)
+
+这里解释一下 `cm1`, `cm2`, `cm3` 的含义。假设 `cm1` 是如下矩阵：
 
 ```
-cm1 =
   [ a, b, c, d, e,
     f, g, h, i, j,
     k, l, m, n, o,
     p, q, r, s, t ]
+```
 
+那么相应地， `cm2` 和 `cm3` 定义如下：
+
+```
 cm2 = 
   [ a, b, c, 
     f, g, h,
@@ -301,7 +311,7 @@ cm3 =
 s[i][j] = cm2.dot(s[i][j].dot() ) + cm3
 ```
 
-完整的代码如下：
+以下代码对原图 `s` 进行灰化处理得到 `grayed`：
 
 ```python
 s = m
@@ -375,7 +385,7 @@ def get_color(point, radius, arr, w, h):
 
 ![](screenshots/blurred.png)
 
-对图片进行模糊处理时经常会听到一个术语模糊半径。`get_color()` 的 `radius` 即模糊半径。相信结合代码你不难理解到底什么是模糊半径。
+做 Android 开发时对图片模糊处理时经常会听到一个术语 *模糊半径*。但是现成的第三方库实在太好用，你只需要传一个参数作为模糊半径第三方库就帮你生成模糊图片了，所以可能你可能并没有深入思考到底什么是模糊半径。没关系，自己动手实现一下上面的 `get_color()`，就不难理解到底什么是模糊半径。
 
 # 总结
 至此，你应该掌握了关于 numpy 和 matplotlib 的以下用法：
