@@ -44,7 +44,7 @@ numpy 文档只会很官方地告诉你以下信息：
 
 对 sample.jpeg 进行同样处理，也会有类似输出：
 
-![](sample.jpeg)
+![](images/sample.jpeg)
 
 ```
 >>> s = mpimg.imread('sample.jpeg')
@@ -173,6 +173,49 @@ array([[0, 1],
 显示剪裁后的结果：
 
 ![](screenshots/clip.png)
+
+## 图片扩展
+先来看看 Android 中 `tileMode` 的用法。
+
+资源文件为 `tmp.xml`，内容如下：
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<bitmap xmlns:android="http://schemas.android.com/apk/res/android"
+    android:src="@android:drawable/ic_input_add"
+    android:tileMode="repeat" />
+```
+
+其中的 `ic_input_add` 是一张图片：
+
+![](media/ic_input_add.png)
+
+布局文件中引用 `tmp.xml` 资源：
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/tmp" />
+```
+
+布局文件预览效果如下：
+
+![-w506](media/15614636193081.jpg)
+
+使用 `np.tile()` 方法可以实现 `tileMode=repeat` 类似的效果。
+
+```python
+ic_add = mpimg.imread('ic_input_add.png')
+ic_add4 = np.tile(ic_add, [4,4,1])
+plt.imshow(ic_add4)
+plt.axis('off')
+plt.show()
+```
+
+![-w724](media/15614637500908.jpg)
+
 
 ## 图片灰化
 
@@ -387,6 +430,21 @@ def get_color(point, radius, arr, w, h):
 
 做 Android 开发时对图片模糊处理时经常会听到一个术语 *模糊半径*。但是现成的第三方库实在太好用，你只需要传一个参数作为模糊半径第三方库就帮你生成模糊图片了，所以可能你可能并没有深入思考到底什么是模糊半径。没关系，自己动手实现一下上面的 `get_color()`，就不难理解到底什么是模糊半径。
 
+## ImageView 的 scaleType
+
+750x460 px
+
+
+# 语音处理
+
+## 音频断句
+
+[jiaaro/pydub: Manipulate audio with a simple and easy high level interface](https://github.com/jiaaro/pydub)
+
+[split_on_silence](https://blog.csdn.net/watfe/article/details/80284242)
+
+[英语听力自动断句程序 - 机器学习-学习记录 - CSDN博客](https://blog.csdn.net/caihh2017/article/details/79301278)
+
 # 总结
 至此，你应该掌握了关于 numpy 和 matplotlib 的以下用法：
 
@@ -394,6 +452,7 @@ def get_color(point, radius, arr, w, h):
 + 创建 array
 + 自定义 dtype
 + 创建 array 并指定 dtype
++ array tile 操作
 + array 切片操作
 + array 旋转操作
 + array 填充操作
@@ -408,6 +467,7 @@ def get_color(point, radius, arr, w, h):
 + np.array()
 + np.dtype((np.int32, (2, 2))) 
 + array[:,:]
++ np.tile()
 + np.rot90(array, 1)
 + array.fill()
 + array.reshape([4, 4])
@@ -417,6 +477,8 @@ def get_color(point, radius, arr, w, h):
 动手练习使用 numpy 是不是比只看 numpy 文档来得更有意思且印象更深刻一些？
 
 TODO 什么是 inSampleSize
+
+[inSampleSize](https://github.com/google/skia/blob/master/src/codec/SkSampledCodec.cpp#L22)
 
 # 参考
 + [python 读取并显示图片的两种方法 - 邊城浪子 - 博客园](https://www.cnblogs.com/yinxiangnan-charles/p/5928689.html)
