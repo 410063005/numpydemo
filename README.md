@@ -102,6 +102,28 @@ Bitmap rotated = Bitmap.createBitmap(bitmap, 0, 0,
 
 参考：[rot90函数](https://docs.scipy.org/doc/numpy-1.13.0/reference/generated/numpy.rot90.html#numpy.rot90)
 
+---
+
+通过转置矩阵来旋转图片。
+
+```py
+lena = mpimg.imread('lena.png')
+lena.shape #(512, 512, 3)
+lena2 = lena.transpose((1,0,2))
+lean2.shape #(512, 512, 3)
+plt.figure()
+plt.subplot(1,2,1)
+plt.imshow(lena)
+plt.axis('off')
+plt.subplot(1,2,2)
+plt.imshow(lena2)
+plt.axis('off')
+plt.show()
+```
+
+![-w724](media/15615540104055.jpg)
+
+
 ## 图片缩放
 Android 缩小图片的一种常用方法是利用 `BitmapFactory.Options.inSampleSize`。根据需求计算出一个缩放因子作为 `inSampleSize`。
 
@@ -430,6 +452,36 @@ def get_color(point, radius, arr, w, h):
 
 做 Android 开发时对图片模糊处理时经常会听到一个术语 *模糊半径*。但是现成的第三方库实在太好用，你只需要传一个参数作为模糊半径第三方库就帮你生成模糊图片了，所以可能你可能并没有深入思考到底什么是模糊半径。没关系，自己动手实现一下上面的 `get_color()`，就不难理解到底什么是模糊半径。
 
+## 图片的差异
+
+```py
+lena = mpimg.imread('lenna.png')
+lena2 = mpimg.imread('lenna_compress.png')
+tmp = abs(lena - lena2) * 10
+plt.figure()
+plt.subplot(1,3,1)
+plt.imshow(lena)
+plt.axis('off')
+plt.subplot(1,3,2)
+plt.imshow(lena2)
+plt.axis('off')
+plt.subplot(1,3,3)
+plt.imshow(tmp)
+plt.axis('off')
+plt.show()
+```
+
++ 矩阵减法
++ 矩阵的绝对值
++ 矩阵的乘法
+
+![-w724](media/15615549385864.jpg)
+
+对比 Android Studio png 转 webp 时的显示功能
+
+![-w744](media/15615550898268.jpg)
+
+
 ## ImageView 的 scaleType
 
 750x460 px
@@ -455,6 +507,8 @@ def get_color(point, radius, arr, w, h):
 + array tile 操作
 + array 切片操作
 + array 旋转操作
++ array 转置操作
++ array 的减法
 + array 填充操作
 + array reshape 操作
 + array 拷贝操作
@@ -486,3 +540,4 @@ TODO 什么是 inSampleSize
 + [如何自定义 dtype](https://docs.scipy.org/doc/numpy-1.13.0/reference/arrays.dtypes.html)
 + [什么是图像模糊](https://zhuanlan.zhihu.com/p/43907816)
 + [高斯模糊的算法 - 阮一峰的网络日志](http://www.ruanyifeng.com/blog/2012/11/gaussian_blur.html)
++ [Lenna - Wikipedia](https://en.wikipedia.org/wiki/Lenna)
